@@ -2,6 +2,12 @@ from pydantic import BaseModel
 from typing import Optional
 
 
+
+class SourceItem(BaseModel):
+    text: str
+    metadata: dict
+
+
 class AskRequest(BaseModel):
     query: str
     k: int = 4
@@ -10,7 +16,7 @@ class AskRequest(BaseModel):
 
 class AskResponse(BaseModel):
     answer: str
-    sources: list[dict]
+    sources: list[SourceItem]
 
 
 class UploadResponse(BaseModel):
