@@ -48,15 +48,22 @@ async def read_pdf(file_path: str) -> List[Document]:
             reader = PyPDF2.PdfReader(f)
             for page_num, page in enumerate(reader.pages, start=1):
                 raw_text = page.extract_text() or ""
+                logger.info(
+                    f"Extracted text from page {page_num} of {file_path} (length: {len(raw_text)} characters)"
+                )
                 chunks = await get_text_chunks(raw_text)
-                for i, chunk in enumerate(chunks):
+                for chunk in chunks:
+                    global_chunk_index = len(documents)
+                    logger.info(
+                        f"Created chunk {global_chunk_index} for page {page_num} of {file_path} (length: {len(chunk)} characters)"
+                    )
                     documents.append(
                         Document(
                             page_content=chunk,
                             metadata={
                                 "source": file_path,
                                 "page": page_num,
-                                "chunk": i,
+                                "chunk": global_chunk_index,
                             },
                         )
                     )
