@@ -49,13 +49,15 @@ async def read_pdf(file_path: str) -> List[Document]:
             for page_num, page in enumerate(reader.pages, start=1):
                 raw_text = page.extract_text() or ""
                 logger.info(
-                    f"Extracted text from page {page_num} of {file_path} (length: {len(raw_text)} characters)"
+                    f"Extracted text page:{page_num} file:{file_path}",
+                    f"(length: {len(raw_text)} characters)"
                 )
                 chunks = await get_text_chunks(raw_text)
                 for chunk in chunks:
                     global_chunk_index = len(documents)
                     logger.info(
-                        f"Created chunk {global_chunk_index} for page {page_num} of {file_path} (length: {len(chunk)} characters)"
+                        f"Created chunk {global_chunk_index} for page {page_num}"
+                        f" of {file_path} (length: {len(chunk)} characters)"
                     )
                     documents.append(
                         Document(
