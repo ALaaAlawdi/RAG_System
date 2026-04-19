@@ -63,7 +63,7 @@ class KnowledgeCenter:
             f"Question: {query}"
         )
 
-        llm = ChatOpenAI(model="gpt-4o-mini")
+        llm = ChatOpenAI(model="gpt-4o")
         response = await llm.ainvoke(prompt)
         logger.info("Chat query completed successfully")
         return {"answer": response.content, "sources": docs}
