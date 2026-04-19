@@ -1,13 +1,13 @@
 # RAG System
 
-A Retrieval-Augmented Generation (RAG) API that ingests PDF/TXT documents and answers questions based on their content using OpenAI embeddings and GPT-4o-mini.
+A Retrieval-Augmented Generation (RAG) API that ingests PDF/TXT documents and answers questions based on their content using OpenAI embeddings and GPT-4o.
 
 ## Stack
 
 - **FastAPI** — API framework
 - **ChromaDB** — vector store (persistent, local)
 - **LangChain** — document chunking and retrieval
-- **OpenAI** — embeddings (`text-embedding-3-large`) + chat (`gpt-4o-mini`)
+- **OpenAI** — embeddings (`text-embedding-3-large`) + chat (`gpt-4o`)
 - **PyPDF2** — PDF parsing
 
 ## Project Structure
@@ -15,7 +15,9 @@ A Retrieval-Augmented Generation (RAG) API that ingests PDF/TXT documents and an
 ```
 RAG_System/
 ├── main.py                          # FastAPI entry point
-├── requirements.txt
+├── pyproject.toml                   # project metadata and dependencies
+├── uv.lock                          # locked dependency tree
+├── requirements.txt                 # pinned deps (pip fallback)
 ├── .env                             # your secrets (gitignored)
 ├── .env.example
 ├── uploads/                         # uploaded files saved here (auto-created)
@@ -37,9 +39,18 @@ RAG_System/
 
 ### 1. Install dependencies
 
+**Using uv (recommended):**
+
+```bash
+uv sync
+```
+
+**Using pip (fallback):**
+
 ```bash
 python -m venv venv
-active .venv/Scripts/activate
+venv\Scripts\activate        # Windows
+source venv/bin/activate     # macOS/Linux
 pip install -r requirements.txt
 ```
 
@@ -56,6 +67,14 @@ OPENAI_API_KEY=sk-...
 ```
 
 ### 3. Run the server
+
+**Using uv:**
+
+```bash
+uv run uvicorn main:app --reload
+```
+
+**Using pip venv:**
 
 ```bash
 uvicorn main:app --reload
