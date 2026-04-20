@@ -14,7 +14,7 @@ MAX_UPLOAD_BYTES = 20 * 1024 * 1024  # Fix #10: 20 MB limit
 
 @router.post("/upload", response_model=UploadResponse)
 async def upload_document(file: UploadFile = File(...)):
-    
+
     original_name = file.filename or "file"
     stem, ext = os.path.splitext(original_name)
     ext = ext.lower()
@@ -59,8 +59,7 @@ async def upload_document(file: UploadFile = File(...)):
 async def ask_question(body: AskRequest):
     if not body.query.strip():
         raise HTTPException(status_code=400, detail="Query cannot be empty.")
-
-    # Fix #11: validate file_path is within uploads dir before it reaches the center
+    
     if body.file_path and not body.file_path.startswith(UPLOADS_DIR):
         raise HTTPException(
             status_code=400, detail=f"file_path must start with '{UPLOADS_DIR}/'."
@@ -68,4 +67,10 @@ async def ask_question(body: AskRequest):
 
     kc = KnowledgeCenter()
     result = await kc.chat(query=body.query, k=body.k, file_path=body.file_path)
+
+    if result is None:
+        raise HTTPException(
+            status_code=500, detail="An error occurred while processing your query."
+        )
+
     return AskResponse(answer=result["answer"], sources=result["sources"])
