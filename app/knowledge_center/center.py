@@ -128,36 +128,34 @@ class KnowledgeCenter:
             return None
 
     async def chat(self, query: str, k: int = 5, file_path: Optional[str] = None):
-        logger.info(
-            f"[CHAT] Incoming query: '{query[:80]}'"
-        )
-        docs = await self.get_answer(query, k, file_path)
+        logger.info(f"[CHAT] Incoming query: '{query[:80]}'")
+        try:
+            docs = await self.get_answer(query, k, file_path)
 
-        if docs is None:
-            logger.error("[CHAT] get_answer raised an exception — returning error response")
-            return {"answer": "An error occurred while searching.", "sources": []}
+            if docs is None:
+                logger.error("[CHAT] get_answer returned None — search failed")
+                return None
 
-        if not docs:
-            logger.warning("[CHAT] No relevant documents found for query")
-            return {"answer": "No relevant documents found.", "sources": []}
+            if not docs:
+                logger.warning("[CHAT] No relevant documents found for query")
+                return {"answer": "No relevant documents found.", "sources": []}
 
-        context = "\n\n".join([d["text"] for d in docs])
-        logger.debug(
-            f"[CHAT] Context: {len(context)} chars across {len(docs)} chunks"
-        )
+            context = "\n\n".join([d["text"] for d in docs])
+            logger.debug(f"[CHAT] Context: {len(context)} chars across {len(docs)} chunks")
 
-        prompt = (
-            "You are a helpful assistant who is good at analyzing source information and answering questions.\n"
-            "Use the following source documents to answer the user's questions.\n"
-            "If you don't know the answer, just say that you don't know.\n"
-            "Use three sentences maximum and keep the answer concise.\n\n"
-            f"Context:\n{context}\n\n"
-            f"Question: {query}"
-        )
+            prompt = (
+                "You are a helpful assistant who is good at analyzing source information and answering questions.\n"
+                "Use the following source documents to answer the user's questions.\n"
+                "If you don't know the answer, just say that you don't know.\n"
+                "Use three sentences maximum and keep the answer concise.\n\n"
+                f"Context:\n{context}\n\n"
+                f"Question: {query}"
+            )
 
-        logger.debug("[CHAT] Sending prompt to LLM...")
-        response = await _llm.ainvoke(prompt)
-        logger.info(
-            f"[CHAT] LLM response received ({len(response.content)} chars)"
-        )
-        return {"answer": response.content, "sources": docs}
+            logger.debug("[CHAT] Sending prompt to LLM...")
+            response = await _llm.ainvoke(prompt)
+            logger.info(f"[CHAT] LLM response received ({len(response.content)} chars)")
+            return {"answer": response.content, "sources": docs}
+        except Exception as e:
+            logger.error(f"[CHAT] Unexpected error: {e}", exc_info=True)
+            return None
