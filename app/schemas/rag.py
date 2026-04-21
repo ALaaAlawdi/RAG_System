@@ -1,6 +1,5 @@
 from pydantic import BaseModel
-from typing import Optional
-
+from typing import Optional, Literal
 
 
 class SourceItem(BaseModel):
@@ -12,6 +11,7 @@ class AskRequest(BaseModel):
     query: str
     k: int = 4
     file_path: Optional[str] = None
+    provider: Literal["openai", "finetune"] = "openai"
 
 
 class AskResponse(BaseModel):
