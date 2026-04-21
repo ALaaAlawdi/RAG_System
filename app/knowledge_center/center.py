@@ -17,7 +17,7 @@ _llm_ollama = ChatOllama(model=OLLAMA_MODEL, temperature=0)
 
 
 def _get_llm(provider: str):
-    if provider == "ollama":
+    if provider == "finetune":
         logger.debug(f"[LLM] Using Ollama model: {OLLAMA_MODEL}")
         return _llm_ollama
     logger.debug("[LLM] Using OpenAI gpt-4o")
