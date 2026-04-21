@@ -8,6 +8,7 @@ A Retrieval-Augmented Generation (RAG) API that ingests PDF/TXT documents and an
 - **ChromaDB** — vector store (persistent, local)
 - **LangChain** — document chunking and retrieval
 - **OpenAI** — embeddings (`text-embedding-3-large`) + chat (`gpt-4o`)
+- **Ollama** — local LLM inference (`hf.co/AlaaAlawdi/llama_finetune`)
 - **PyPDF2** — PDF parsing
 
 ## Project Structure
@@ -120,12 +121,14 @@ Ask a question. The system retrieves the most relevant chunks from all uploaded 
 | `query` | string | required | The question to answer |
 | `k` | int | `4` | Number of chunks to retrieve |
 | `file_path` | string | `null` | Limit search to a specific file (e.g. `uploads/report.pdf`) |
+| `provider` | string | `"openai"` | LLM to use: `"openai"` (gpt-4o) or `"ollama"` (local fine-tuned model) |
 
 ```json
 {
   "query": "What are the main findings?",
   "k": 4,
-  "file_path": "uploads/report.pdf"
+  "file_path": "uploads/report.pdf",
+  "provider": "openai"
 }
 ```
 
