@@ -12,3 +12,4 @@ colorlog==6.10.1
 pydantic-settings==2.13.1
 python-dotenv==1.2.2
 openai==2.32.0
+langchain-ollama==1.1.0
