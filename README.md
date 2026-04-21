@@ -67,7 +67,29 @@ Edit `.env` and add your OpenAI API key:
 OPENAI_API_KEY=sk-...
 ```
 
-### 3. Run the server
+### 3. (Optional) Set up the fine-tuned Ollama model
+
+Only required if you want to use `"provider": "finetune"` in `/ask`.
+
+1. **Install Ollama** — download from [ollama.com](https://ollama.com/download)
+
+2. **Pull the fine-tuned model:**
+
+```bash
+ollama pull hf.co/AlaaAlawdi/llama_finetune
+```
+
+3. **Make sure Ollama is running** before starting the server:
+
+```bash
+ollama serve
+```
+
+> If you skip this step, the API still works normally with `"provider": "openai"`.
+
+---
+
+### 4. Run the server
 
 **Using uv:**
 
@@ -121,7 +143,7 @@ Ask a question. The system retrieves the most relevant chunks from all uploaded 
 | `query` | string | required | The question to answer |
 | `k` | int | `4` | Number of chunks to retrieve |
 | `file_path` | string | `null` | Limit search to a specific file (e.g. `uploads/report.pdf`) |
-| `provider` | string | `"openai"` | LLM to use: `"openai"` (gpt-4o) or `"ollama"` (local fine-tuned model) |
+| `provider` | string | `"openai"` | LLM to use: `"openai"` (gpt-4o) or `"finetune"` (local Ollama fine-tuned model) |
 
 ```json
 {
