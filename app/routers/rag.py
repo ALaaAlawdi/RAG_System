@@ -66,7 +66,7 @@ async def ask_question(body: AskRequest):
         )
 
     kc = KnowledgeCenter()
-    result = await kc.chat(query=body.query, k=body.k, file_path=body.file_path)
+    result = await kc.chat(query=body.query, k=body.k, file_path=body.file_path, provider=body.provider)
 
     if result is None:
         raise HTTPException(
