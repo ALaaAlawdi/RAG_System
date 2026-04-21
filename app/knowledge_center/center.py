@@ -2,6 +2,7 @@ from .setup import get_vector_store, get_openai_embedding_model, read_pdf, read_
 from ..core.logger import setup_logger
 from langchain_chroma import Chroma
 from langchain_openai import ChatOpenAI
+from langchain_ollama import ChatOllama
 from typing import Optional
 import hashlib
 
@@ -9,9 +10,18 @@ logger = setup_logger(__name__)
 
 COLLECTION_NAME = "base_center"
 UPLOADS_DIR = "uploads"
+OLLAMA_MODEL = "hf.co/AlaaAlawdi/llama_finetune"
+
+_llm_openai = ChatOpenAI(model="gpt-4o")
+_llm_ollama = ChatOllama(model=OLLAMA_MODEL, temperature=0)
 
 
-_llm = ChatOpenAI(model="gpt-4o")
+def _get_llm(provider: str):
+    if provider == "ollama":
+        logger.debug(f"[LLM] Using Ollama model: {OLLAMA_MODEL}")
+        return _llm_ollama
+    logger.debug("[LLM] Using OpenAI gpt-4o")
+    return _llm_openai
 
 
 class KnowledgeCenter:
@@ -127,7 +137,7 @@ class KnowledgeCenter:
             logger.error(f"[SEARCH] Failed: {e}", exc_info=True)
             return None
 
-    async def chat(self, query: str, k: int = 5, file_path: Optional[str] = None):
+    async def chat(self, query: str, k: int = 5, file_path: Optional[str] = None, provider: str = "openai"):
         logger.info(f"[CHAT] Incoming query: '{query[:80]}'")
         try:
             docs = await self.get_answer(query, k, file_path)
@@ -153,7 +163,7 @@ class KnowledgeCenter:
             )
 
             logger.debug("[CHAT] Sending prompt to LLM...")
-            response = await _llm.ainvoke(prompt)
+            response = await _get_llm(provider).ainvoke(prompt)
             logger.info(f"[CHAT] LLM response received ({len(response.content)} chars)")
             return {"answer": response.content, "sources": docs}
         except Exception as e:
