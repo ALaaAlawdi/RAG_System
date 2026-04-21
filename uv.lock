@@ -680,6 +680,19 @@ wheels = [
 ]
 
 [[package]]
+name = "langchain-ollama"
+version = "1.1.0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "langchain-core" },
+    { name = "ollama" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/d4/9b/6641afe8a5bf807e454fd464eddfc7eb2f2df53cb0b29744381171f9c609/langchain_ollama-1.1.0.tar.gz", hash = "sha256:f776f56f6782ae4da7692579b94a6575906118318d1023b455d7207f9d059811", size = 133075, upload-time = "2026-04-07T02:48:00.873Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/2c/b2/c2acb076590a98bee2816ed5f285e00df162a34238f9e276e175e14ebc35/langchain_ollama-1.1.0-py3-none-any.whl", hash = "sha256:43ac83a6eacb0f43855810739794dd55019e0d9b17bdcf3ecb3b1991ac3b59dd", size = 31413, upload-time = "2026-04-07T02:47:59.642Z" },
+]
+
+[[package]]
 name = "langchain-openai"
 version = "1.1.14"
 source = { registry = "https://pypi.org/simple" }
@@ -691,6 +704,18 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/8e/f5/b1a56f703fb90952b07ff9fb5507123a39df1267d62a7f2bb821c5dbb628/langchain_openai-1.1.14.tar.gz", hash = "sha256:71b4262932fabe506ce79c175dbc956cc48f24d81e20b27662df493147750643", size = 1115195, upload-time = "2026-04-16T14:55:24.696Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/0b/fa/8c33befbc0cf81b21371cc1dab4e7bf94a80b8116194f263a5021ec02529/langchain_openai-1.1.14-py3-none-any.whl", hash = "sha256:cb525d2011f9813fc15a7dcfd4bca5b87badcbcb2c113a7fbe45d1b8a1bbb69c", size = 88705, upload-time = "2026-04-16T14:55:23.159Z" },
+]
+
+[[package]]
+name = "langchain-text-splitters"
+version = "1.1.2"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "langchain-core" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/26/9f/6c545900fefb7b00ddfa3f16b80d61338a0ec68c31c5451eeeab99082760/langchain_text_splitters-1.1.2.tar.gz", hash = "sha256:782a723db0a4746ac91e251c7c1d57fd23636e4f38ed733074e28d7a86f41627", size = 293580, upload-time = "2026-04-16T14:20:39.162Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/d3/26/1ef06f56198d631296d646a6223de35bcc6cf9795ceb2442816bc963b84c/langchain_text_splitters-1.1.2-py3-none-any.whl", hash = "sha256:a2de0d799ff31886429fd6e2e0032df275b60ec817c19059a7b46181cc1c2f10", size = 35903, upload-time = "2026-04-16T14:20:38.243Z" },
 ]
 
 [[package]]
@@ -922,6 +947,19 @@ source = { registry = "https://pypi.org/simple" }
 sdist = { url = "https://files.pythonhosted.org/packages/0b/5f/19930f824ffeb0ad4372da4812c50edbd1434f678c90c2733e1188edfc63/oauthlib-3.3.1.tar.gz", hash = "sha256:0f0f8aa759826a193cf66c12ea1af1637f87b9b4622d46e866952bb022e538c9", size = 185918, upload-time = "2025-06-19T22:48:08.269Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/be/9c/92789c596b8df838baa98fa71844d84283302f7604ed565dafe5a6b5041a/oauthlib-3.3.1-py3-none-any.whl", hash = "sha256:88119c938d2b8fb88561af5f6ee0eec8cc8d552b7bb1f712743136eb7523b7a1", size = 160065, upload-time = "2025-06-19T22:48:06.508Z" },
+]
+
+[[package]]
+name = "ollama"
+version = "0.6.1"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "httpx" },
+    { name = "pydantic" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/9d/5a/652dac4b7affc2b37b95386f8ae78f22808af09d720689e3d7a86b6ed98e/ollama-0.6.1.tar.gz", hash = "sha256:478c67546836430034b415ed64fa890fd3d1ff91781a9d548b3325274e69d7c6", size = 51620, upload-time = "2025-11-13T23:02:17.416Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/47/4f/4a617ee93d8208d2bcf26b2d8b9402ceaed03e3853c754940e2290fed063/ollama-0.6.1-py3-none-any.whl", hash = "sha256:fc4c984b345735c5486faeee67d8a265214a31cbb828167782dc642ce0a2bf8c", size = 14354, upload-time = "2025-11-13T23:02:16.292Z" },
 ]
 
 [[package]]
@@ -1445,7 +1483,10 @@ dependencies = [
     { name = "fastapi" },
     { name = "langchain" },
     { name = "langchain-chroma" },
+    { name = "langchain-core" },
+    { name = "langchain-ollama" },
     { name = "langchain-openai" },
+    { name = "langchain-text-splitters" },
     { name = "openai" },
     { name = "pydantic-settings" },
     { name = "pypdf2" },
@@ -1456,18 +1497,21 @@ dependencies = [
 
 [package.metadata]
 requires-dist = [
-    { name = "chromadb", specifier = ">=1.5.8" },
-    { name = "colorlog", specifier = ">=6.10.1" },
-    { name = "fastapi", specifier = ">=0.136.0" },
-    { name = "langchain", specifier = ">=1.2.15" },
-    { name = "langchain-chroma", specifier = ">=1.1.0" },
-    { name = "langchain-openai", specifier = ">=1.1.14" },
-    { name = "openai", specifier = ">=2.32.0" },
-    { name = "pydantic-settings", specifier = ">=2.13.1" },
-    { name = "pypdf2", specifier = ">=3.0.1" },
-    { name = "python-dotenv", specifier = ">=1.2.2" },
-    { name = "python-multipart", specifier = ">=0.0.26" },
-    { name = "uvicorn", extras = ["standard"], specifier = ">=0.44.0" },
+    { name = "chromadb", specifier = "==1.5.8" },
+    { name = "colorlog", specifier = "==6.10.1" },
+    { name = "fastapi", specifier = "==0.136.0" },
+    { name = "langchain", specifier = "==1.2.15" },
+    { name = "langchain-chroma", specifier = "==1.1.0" },
+    { name = "langchain-core", specifier = "==1.3.0" },
+    { name = "langchain-ollama", specifier = ">=1.1.0" },
+    { name = "langchain-openai", specifier = "==1.1.14" },
+    { name = "langchain-text-splitters", specifier = "==1.1.2" },
+    { name = "openai", specifier = "==2.32.0" },
+    { name = "pydantic-settings", specifier = "==2.13.1" },
+    { name = "pypdf2", specifier = "==3.0.1" },
+    { name = "python-dotenv", specifier = "==1.2.2" },
+    { name = "python-multipart", specifier = "==0.0.26" },
+    { name = "uvicorn", extras = ["standard"], specifier = "==0.44.0" },
 ]
 
 [[package]]
