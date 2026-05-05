@@ -1,4 +1,5 @@
 from .setup import get_vector_store, get_openai_embedding_model, read_pdf, read_txt
+from ..core.config import settings
 from ..core.logger import setup_logger
 from langchain_chroma import Chroma
 from langchain_openai import ChatOpenAI
@@ -9,7 +10,7 @@ import hashlib
 logger = setup_logger(__name__)
 
 COLLECTION_NAME = "base_center"
-UPLOADS_DIR = "uploads"
+UPLOADS_DIR = settings.UPLOADS_DIR
 OLLAMA_MODEL = "hf.co/AlaaAlawdi/llama_finetune"
 
 _llm_openai = ChatOpenAI(model="gpt-4o")
