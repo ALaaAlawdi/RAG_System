@@ -12,7 +12,7 @@ class OCRStatusResponse(BaseModel):
     status: Literal["pending", "processing", "complete", "error"]
     markdown: Optional[str] = None
     error: Optional[str] = None
-
+    
     class Config:
         extra = "allow"
 
