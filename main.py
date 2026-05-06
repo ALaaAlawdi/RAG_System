@@ -2,13 +2,13 @@ import os
 from app.core.config import settings  
 from fastapi import FastAPI
 from fastapi.openapi.docs import get_swagger_ui_html, get_redoc_html
-from app.routers.rag import router
+from app.api.v1.router import api_router
 
-os.makedirs("uploads", exist_ok=True)
-os.makedirs("chroma_db", exist_ok=True)
+for _dir in [settings.UPLOADS_DIR, settings.OCR_INPUTS_DIR, settings.OCR_OUTPUTS_DIR, "chroma_db"]:
+    os.makedirs(_dir, exist_ok=True)
 
 app = FastAPI(title="RAG System", version="1.0.0", docs_url=None, redoc_url=None)
-app.include_router(router, prefix="/api/v1")
+app.include_router(api_router, prefix="/api/v1")
 
 
 @app.get("/docs", include_in_schema=False)
