@@ -4,8 +4,6 @@ from fastapi import FastAPI
 from fastapi.openapi.docs import get_swagger_ui_html, get_redoc_html
 from app.api.v1.router import api_router
 
-for _dir in [settings.UPLOADS_DIR, settings.OCR_INPUTS_DIR, settings.OCR_OUTPUTS_DIR, "chroma_db"]:
-    os.makedirs(_dir, exist_ok=True)
 
 app = FastAPI(title="RAG System", version="1.0.0", docs_url=None, redoc_url=None)
 app.include_router(api_router, prefix="/api/v1")
