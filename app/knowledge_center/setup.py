@@ -3,7 +3,9 @@ from langchain_openai import OpenAIEmbeddings
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 import chromadb
 from langchain_core.documents import Document
-import PyPDF2
+import docx
+import httpx
+from html.parser import HTMLParser
 from ..core.logger import setup_logger
 from typing import Optional, List
 
@@ -41,38 +43,6 @@ async def get_text_chunks(text: str) -> Optional[list[str]]:
     return splitter.split_text(text)
 
 
-async def read_pdf(file_path: str) -> List[Document]:
-    documents = []
-    try:
-        with open(file_path, "rb") as f:
-            reader = PyPDF2.PdfReader(f)
-            for page_num, page in enumerate(reader.pages, start=1):
-                raw_text = page.extract_text() or ""
-                logger.info(
-                    f"Extracted text page:{page_num} file:{file_path} (length: {len(raw_text)} characters)"
-                )
-                chunks = await get_text_chunks(raw_text)
-                for chunk in chunks:
-                    global_chunk_index = len(documents)
-                    logger.info(
-                        f"Created chunk {global_chunk_index} for page {page_num}"
-                        f" of {file_path} (length: {len(chunk)} characters)"
-                    )
-                    documents.append(
-                        Document(
-                            page_content=chunk,
-                            metadata={
-                                "source": file_path,
-                                "page": page_num,
-                                "chunk": global_chunk_index,
-                            },
-                        )
-                    )
-        return documents
-    except Exception as e:
-        logger.error(f"Error reading {file_path}: {e}")
-        return []
-
 
 async def read_txt(file_path: str) -> List[Document]:
     documents = []
@@ -94,4 +64,73 @@ async def read_txt(file_path: str) -> List[Document]:
         return documents
     except Exception as e:
         logger.error(f"Error reading {file_path}: {e}")
+        return []
+
+
+async def read_docx(file_path: str) -> List[Document]:
+    try:
+        doc = docx.Document(file_path)
+        text = "\n".join(p.text for p in doc.paragraphs if p.text.strip())
+        chunks = await get_text_chunks(text)
+        return [
+            Document(page_content=chunk, metadata={"source": file_path, "page": 1, "chunk": i})
+            for i, chunk in enumerate(chunks)
+        ]
+    except Exception as e:
+        logger.error(f"Error reading {file_path}: {e}")
+        return []
+
+
+async def read_markdown(file_path: str) -> List[Document]:
+    try:
+        with open(file_path, "r", encoding="utf-8") as f:
+            text = f.read()
+        chunks = await get_text_chunks(text)
+        return [
+            Document(page_content=chunk, metadata={"source": file_path, "page": 1, "chunk": i})
+            for i, chunk in enumerate(chunks)
+        ]
+    except Exception as e:
+        logger.error(f"Error reading {file_path}: {e}")
+        return []
+
+
+class _TextExtractor(HTMLParser):
+    def __init__(self):
+        super().__init__()
+        self._parts: list[str] = []
+        self._skip_tags = {"script", "style", "head", "nav", "footer"}
+        self._active_skip = 0
+
+    def handle_starttag(self, tag, _attrs):
+        if tag in self._skip_tags:
+            self._active_skip += 1
+
+    def handle_endtag(self, tag):
+        if tag in self._skip_tags:
+            self._active_skip = max(0, self._active_skip - 1)
+
+    def handle_data(self, data):
+        if self._active_skip == 0 and data.strip():
+            self._parts.append(data.strip())
+
+    def get_text(self) -> str:
+        return "\n".join(self._parts)
+
+
+async def fetch_url(url: str) -> List[Document]:
+    try:
+        async with httpx.AsyncClient(follow_redirects=True, timeout=30) as client:
+            response = await client.get(url)
+            response.raise_for_status()
+        parser = _TextExtractor()
+        parser.feed(response.text)
+        text = parser.get_text()
+        chunks = await get_text_chunks(text)
+        return [
+            Document(page_content=chunk, metadata={"source": url, "page": 1, "chunk": i})
+            for i, chunk in enumerate(chunks)
+        ]
+    except Exception as e:
+        logger.error(f"Error fetching {url}: {e}")
         return []
